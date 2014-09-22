@@ -152,7 +152,7 @@ window.onkeydown = function(event) {
       running = !running;
       break;
     case 82:
-      // 'c'
+      // 'r'
       reset();
       clear();
       break;
