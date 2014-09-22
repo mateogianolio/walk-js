@@ -41,25 +41,24 @@ function ready() {
 }
 
 function update() {
-  if(!running)
+  if (!running)
     return;
           
-  if(traversal) {
+  if (traversal) {
     paint();
     return;
   }
           
-  try {
-    state.past = JSON.parse(JSON.stringify(state));
-    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
-  } catch (e) {
-    // maximum call stack exceeded
+  if (count++ < 1000) {
+      state.past = JSON.parse(JSON.stringify(state));
+      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count + '</span>';
+  } else {
     var inputs = document.getElementsByTagName('INPUT');
     for(i = 0; i < inputs.length; i++)
       inputs[i].disabled = true;
-            
+
     document.getElementById('traversal').innerHTML = 'traversing...';
-            
+
     traversal = true;
     return;
   }
