@@ -11,7 +11,7 @@ function ready() {
           
   context = canvas.getContext('2d');
           
-  rate = 10;
+  rate = 20;
           
   state = {
     'position': {
