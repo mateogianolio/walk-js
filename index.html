@@ -26,7 +26,9 @@
     <div controls>
       <h3 red>Walk.js</h3>
       Pseudo-random walk traversal.<br>
-      Every step remembers the properties of its predecessor.
+      Every step remembers the properties of its predecessor.<br>
+      Traversal is triggered when maximum call stack<br>
+      is exceeded.
       <br>
       <br>
       <label for="xbias">bias<sub>x</sub></label><br>
@@ -73,5 +75,15 @@
       <div id="space">(press <b>space</b> to pause)</div>
       <br>
     </div>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-41408481-4', 'auto');
+      ga('send', 'pageview');
+    </script>
   </body>
 </html>
