@@ -10,13 +10,8 @@ function ready() {
   canvas.height = window.innerHeight;
 
   context = canvas.getContext('2d');
-          
-<<<<<<< HEAD
+  
   rate = 20;
-          
-=======
-  rate = 10;
->>>>>>> master
   state = {
     'position': {
       'x': Math.round(canvas.width / 2),
