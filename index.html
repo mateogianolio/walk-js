@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Walk.js</title>
+    <title>Walk.js &mdash; Pseudo-random walk traversal</title>
     <style>
       * {
         margin: 0;
@@ -27,8 +27,8 @@
       <h3 red>Walk.js</h3>
       Pseudo-random walk traversal.<br>
       Every step remembers the properties of its predecessor.<br>
-      Traversal is triggered when maximum call stack<br>
-      is exceeded.
+      Traversal is triggered when call stack<br>
+      exceeds 1000.
       <br>
       <br>
       <label for="xbias">bias<sub>x</sub></label><br>
@@ -72,7 +72,9 @@
       <div id="callstack">call stack: <span red>0</span></div>
       <div id="traversal"></div>
       <br>
-      <div id="space">(press <b>space</b> to pause)</div>
+      <div>(press <b>r</b> to reset)</div>
+      <div>(press <b>t</b> to toggle traversal)</div>
+      <div>(press <b>space</b> to toggle pause)</div>
       <br>
     </div>
     
