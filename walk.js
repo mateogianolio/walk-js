@@ -47,25 +47,10 @@ function update() {
     paint();
     return;
   }
-<<<<<<< HEAD
-          
-  if (count++ < 1000) {
-      state.past = JSON.parse(JSON.stringify(state));
-      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count + '</span>';
-  } else {
-    var inputs = document.getElementsByTagName('INPUT');
-    for(i = 0; i < inputs.length; i++)
-      inputs[i].disabled = true;
-
-    document.getElementById('traversal').innerHTML = 'traversing...';
-
-    traversal = true;
-=======
   
   // maximum call stack size exceeded, start traversing
   if (count++ > 1000) {
     toggle();
->>>>>>> master
     return;
   }
   
