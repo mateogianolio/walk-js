@@ -55,7 +55,6 @@ function update() {
   states.forEach(function(state) {
     try {
       state.parent = JSON.parse(JSON.stringify(state));
-      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
     } catch (error) {
       // maximum call stack size reached, force traversal
       toggle();
@@ -108,6 +107,8 @@ function paint() {
       context.stroke();
       context.closePath();
     });
+    
+    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
   } else {
     // traversing..
     states.forEach(function(state, index, obj) {
@@ -126,9 +127,9 @@ function paint() {
       context.closePath();
 
       obj[index] = state.parent;
-
-      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
     });
+    
+    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
   }
 }
 
