@@ -56,7 +56,7 @@ function update() {
   
   state.past = JSON.parse(JSON.stringify(state));
   document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count + '</span>';
-          
+
   flip = Math.round(Math.random() - state.direction.bias.x);
   state.direction.x = Math.pow(-1, flip);
           
@@ -66,6 +66,7 @@ function update() {
   state.position.x += state.step * state.direction.x;
   state.position.y += state.step * state.direction.y;
 
+  // TODO:  move to separate function
   if (state.position.x < 0) {
     state.position.x = 0;
     state.direction.x *= -1;
@@ -120,6 +121,8 @@ function paint() {
 function toggle() {
   traversal = !traversal;
   
+  // TODO:  currently the input fields are not updated to match
+  //        the state at which the toggling took place
   var inputs = document.getElementsByTagName('INPUT');
   var input;
   for(i = 0; i < inputs.length; i++) {
