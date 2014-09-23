@@ -136,7 +136,9 @@ function clear() {
 }
 
 function reset() {
-  traversal = false;
+  if(traversal)
+    toggle();
+  
   count = 0;
   
   while(state.past != null)
