@@ -193,10 +193,6 @@ function reset() {
   
   clear();
 }
-
-canvas.ontouchstart = function(event) {
-  toggle();
-};
   
 window.onkeydown = function(event) {
   event = event || window.event;
