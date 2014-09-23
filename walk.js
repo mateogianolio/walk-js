@@ -1,5 +1,5 @@
 var canvas, context,
-    rate, state, interval, flip,
+    states, branches, rate, interval, flip,
     count = 0,
     traversal = false,
     running = true;
@@ -11,30 +11,34 @@ function ready() {
 
   context = canvas.getContext('2d');
   
-  rate = 20;
-  state = {
-    'position': {
-      'x': Math.round(canvas.width / 2),
-      'y': Math.round(canvas.height / 2),
-    },
-    'step': 8,
-    'size': 2,
-    'direction': {
-      'x': 0,
-      'y': 1,
-      'bias': {
+  states = [];
+  branches = 4;
+  for(i = 0; i < branches; i++) {
+    states.push({
+      'position': {
+        'x': Math.round(canvas.width / 2),
+        'y': Math.round(canvas.height / 2),
+      },
+      'step': 8,
+      'size': 2,
+      'direction': {
         'x': 0,
-        'y': 0
-      }
-    },
-    'color': [
-      0,
-      0,
-      0,
-      .1
-    ],
-    'parent': null
-  };
+        'y': 1,
+        'bias': {
+          'x': 0,
+          'y': 0
+        }
+      },
+      'color': [
+        0,
+        0,
+        0,
+        .1
+      ],
+      'parent': null
+    });
+  }
+  rate = 20;
 
   interval = setInterval(function() { update(); }, rate);
 }
@@ -47,42 +51,46 @@ function update() {
     paint();
     return;
   }
-  
-  try {
-    state.parent = JSON.parse(JSON.stringify(state));
-    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
-  } catch (error) {
-    // maximum call stack size reached, force traversal
-    toggle();
-    return;
-  }
 
-  flip = Math.round(Math.random() - state.direction.bias.x);
-  state.direction.x = Math.pow(-1, flip);
-          
-  flip = Math.round(Math.random() - state.direction.bias.y);
-  state.direction.y = Math.pow(-1, flip);
+  states.forEach(function(state) {
+    try {
+      state.parent = JSON.parse(JSON.stringify(state));
+      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
+    } catch (error) {
+      // maximum call stack size reached, force traversal
+      toggle();
+      
+      // hack to break out of foreach
+      throw {};
+    }
+    
+    flip = Math.round(Math.random() - state.direction.bias.x);
+    state.direction.x = Math.pow(-1, flip);
 
-  state.position.x += state.step * state.direction.x;
-  state.position.y += state.step * state.direction.y;
+    flip = Math.round(Math.random() - state.direction.bias.y);
+    state.direction.y = Math.pow(-1, flip);
 
-  // TODO:  move to separate function
-  if (state.position.x < 0) {
-    state.position.x = 0;
-    state.direction.x *= -1;
-  }
+    state.position.x += state.step * state.direction.x;
+    state.position.y += state.step * state.direction.y;
 
-  if (state.position.x > canvas.width) {
-    state.position.x = canvas.width - state.step;
-  }
+    // TODO:  move to separate function
+    if (state.position.x < 0) {
+      state.position.x = 0;
+      state.direction.x *= -1;
+    }
 
-  if (state.position.y < 0) {
-    state.position.y = 0;
-  }
+    if (state.position.x > canvas.width) {
+      state.position.x = canvas.width - state.step;
+    }
 
-  if (state.position.y > canvas.height) {
-    state.position.y = canvas.height - state.step;
-  }
+    if (state.position.y < 0) {
+      state.position.y = 0;
+    }
+
+    if (state.position.y > canvas.height) {
+      state.position.y = canvas.height - state.step;
+    }
+  });
 
   paint();
 }
@@ -90,31 +98,37 @@ function update() {
 function paint() {
   if (!traversal) {
     // walking about..
-    context.lineWidth = state.size;
-    context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
-          
-    context.beginPath();
-    context.moveTo(state.parent.position.x, state.parent.position.y);
-    context.lineTo(state.position.x, state.position.y);
-    context.stroke();
-    context.closePath();
-  } else if (state.parent != null) {
-    // traversing..
-    context.lineWidth = state.parent.size;
-    context.strokeStyle = 'rgba(' + state.color[0] + ', ' + state.color[1] + ', ' + state.color[2] + ', 1)';
-    
-    context.beginPath();
-    context.moveTo(state.parent.position.x, state.parent.position.y);
-    context.lineTo(state.position.x, state.position.y);
-    context.stroke();
-    context.closePath();
-    
-    state = state.parent;
-            
-    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
+    states.forEach(function(state) {
+      context.lineWidth = state.size;
+      context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
+
+      context.beginPath();
+      context.moveTo(state.parent.position.x, state.parent.position.y);
+      context.lineTo(state.position.x, state.position.y);
+      context.stroke();
+      context.closePath();
+    });
   } else {
-    toggle();
-    clear();
+    // traversing..
+    states.forEach(function(state, index, obj) {
+      if(state.parent == null) {
+        reset();
+        return;
+      }
+
+      context.lineWidth = state.parent.size;
+      context.strokeStyle = 'rgba(' + state.color[0] + ', ' + state.color[1] + ', ' + state.color[2] + ', 1)';
+
+      context.beginPath();
+      context.moveTo(state.parent.position.x, state.parent.position.y);
+      context.lineTo(state.position.x, state.position.y);
+      context.stroke();
+      context.closePath();
+
+      obj[index] = state.parent;
+
+      document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
+    });
   }
 }
 
@@ -144,8 +158,39 @@ function reset() {
   
   count = 0;
   
-  while(state.parent != null)
-    state = state.parent;
+  states.forEach(function(state) {
+    while(state.parent != null)
+      state = state.parent;
+  });
+  
+  states = [];
+  for(i = 0; i < branches; i++) {
+    states.push({
+      'position': {
+        'x': Math.round(canvas.width / 2),
+        'y': Math.round(canvas.height / 2),
+      },
+      'step': 8,
+      'size': 2,
+      'direction': {
+        'x': 0,
+        'y': 1,
+        'bias': {
+          'x': 0,
+          'y': 0
+        }
+      },
+      'color': [
+        0,
+        0,
+        0,
+        .1
+      ],
+      'parent': null
+    });
+  }
+  
+  clear();
 }
 
 window.ontouchstart = function(event) {
@@ -163,7 +208,6 @@ window.onkeydown = function(event) {
     case 82:
       // 'r'
       reset();
-      clear();
       break;
     case 84:
       // 't'
