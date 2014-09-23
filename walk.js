@@ -33,7 +33,7 @@ function ready() {
       0,
       .1
     ],
-    'past': null
+    'parent': null
   };
 
   interval = setInterval(function() { update(); }, rate);
@@ -54,7 +54,7 @@ function update() {
     return;
   }
   
-  state.past = JSON.parse(JSON.stringify(state));
+  state.parent = JSON.parse(JSON.stringify(state));
   document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count + '</span>';
 
   flip = Math.round(Math.random() - state.direction.bias.x);
@@ -94,22 +94,22 @@ function paint() {
     context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
           
     context.beginPath();
-    context.moveTo(state.past.position.x, state.past.position.y);
+    context.moveTo(state.parent.position.x, state.parent.position.y);
     context.lineTo(state.position.x, state.position.y);
     context.stroke();
     context.closePath();
-  } else if (state.past != null) {
+  } else if (state.parent != null) {
     // traversing..
-    context.lineWidth = state.past.size;
+    context.lineWidth = state.parent.size;
     context.strokeStyle = 'rgba(' + state.color[0] + ', ' + state.color[1] + ', ' + state.color[2] + ', 1)';
     
     context.beginPath();
-    context.moveTo(state.past.position.x, state.past.position.y);
+    context.moveTo(state.parent.position.x, state.parent.position.y);
     context.lineTo(state.position.x, state.position.y);
     context.stroke();
     context.closePath();
     
-    state = state.past;
+    state = state.parent;
             
     document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
   } else {
@@ -144,8 +144,8 @@ function reset() {
   
   count = 0;
   
-  while(state.past != null)
-    state = state.past;
+  while(state.parent != null)
+    state = state.parent;
 }
   
 window.onkeydown = function(event) {
