@@ -51,7 +51,7 @@ function update() {
   try {
     state.parent = JSON.parse(JSON.stringify(state));
     document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
-  catch (error) {
+  } catch (error) {
     // maximum call stack size reached, force traversal
     toggle();
     return;
