@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Walk.js &mdash; Pseudo-random walk traversal</title>
     <style>
       * {
@@ -13,6 +14,20 @@
         position: absolute;
         top: 0;
         left: 0;
+      }
+      
+      [mobile] { display: none; }
+      
+      @media only screen 
+      and (min-device-width: 320px) 
+      and (max-device-width: 480px) {
+        [controls] { display: none };
+        [mobile] {
+          display: block;
+          position: absolute;
+          top: 0;
+          text-align: center;
+        };
       }
       
       [red] {
@@ -79,6 +94,9 @@
       <div>(press <b>t</b> to toggle traversal)</div>
       <div>(press <b>space</b> to toggle pause)</div>
       <br>
+    </div>
+    <div mobile>
+      Touch for traversal!
     </div>
     
     <script>

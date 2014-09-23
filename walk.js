@@ -147,6 +147,10 @@ function reset() {
   while(state.parent != null)
     state = state.parent;
 }
+
+window.ontouchstart = function(event) {
+  toggle();
+};
   
 window.onkeydown = function(event) {
   event = event || window.event;
@@ -167,3 +171,5 @@ window.onkeydown = function(event) {
       break;
   }
 };
+
+
