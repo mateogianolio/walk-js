@@ -16,20 +16,10 @@
         left: 0;
       }
       
-      [mobile] { display: none; }
-      
       @media only screen 
       and (min-device-width: 320px) 
-      and (max-device-width: 640px) {
+      and (max-device-width: 480px) {
         [controls] { display: none };
-        [mobile] {
-          width: 100%;
-          display: inline;
-          position: absolute;
-          top: 0;
-          text-align: center;
-          z-index: 999;
-        };
       }
       
       [red] {
@@ -101,9 +91,6 @@
       <div>(press <b>t</b> to toggle traversal)</div>
       <div>(press <b>space</b> to toggle pause)</div>
       <br>
-    </div>
-    <div mobile>
-      Touch for traversal!
     </div>
     
     <script>
