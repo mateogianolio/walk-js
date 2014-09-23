@@ -48,14 +48,14 @@ function update() {
     return;
   }
   
-  // maximum call stack size exceeded, start traversing
-  if (count++ > 1000) {
+  try {
+    state.parent = JSON.parse(JSON.stringify(state));
+    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
+  catch (error) {
+    // maximum call stack size reached, force traversal
     toggle();
     return;
   }
-  
-  state.parent = JSON.parse(JSON.stringify(state));
-  document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count + '</span>';
 
   flip = Math.round(Math.random() - state.direction.bias.x);
   state.direction.x = Math.pow(-1, flip);
