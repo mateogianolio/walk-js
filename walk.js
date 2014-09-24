@@ -12,6 +12,16 @@ function ready() {
   context = canvas.getContext('2d');
   
   states = [];
+  states.set = function(attribute, value) {
+    attribute = attribute.split('.');
+    this.forEach(function(obj) {
+      for (i = 0; i < attribute.length - 1; i++)
+        obj = obj[attribute[i]];
+
+      obj[attribute[i]] = value;
+    });
+  }
+  
   branches = 4;
   for(i = 0; i < branches; i++) {
     states.push({
@@ -38,6 +48,7 @@ function ready() {
       'parent': null
     });
   }
+  
   rate = 20;
 
   interval = setInterval(function() { update(); }, rate);
@@ -108,7 +119,7 @@ function paint() {
       context.closePath();
     });
     
-    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count++ + '</span>';
+    document.getElementById('callstack').innerHTML = 'call stack: <span data-red>' + count++ + '</span>';
   } else {
     // traversing..
     states.forEach(function(state, index, obj) {
@@ -129,7 +140,7 @@ function paint() {
       obj[index] = state.parent;
     });
     
-    document.getElementById('callstack').innerHTML = 'call stack: <span red>' + count-- + '</span>';
+    document.getElementById('callstack').innerHTML = 'call stack: <span data-red>' + count-- + '</span>';
   }
 }
 
@@ -146,7 +157,7 @@ function toggle() {
     input.disabled = !input.disabled;
   }
   
-  document.getElementById('traversal').innerHTML = traversal ? 'traversing...' : '';
+  document.getElementById('traversal').innerHTML = traversal ? '<span data-red>traversing</span>...' : '';
 }
 
 function clear() {
@@ -159,12 +170,11 @@ function reset() {
   
   count = 0;
   
-  states.forEach(function(state) {
+  var state;
+  while(state = states.pop())
     while(state.parent != null)
       state = state.parent;
-  });
   
-  states = [];
   for(i = 0; i < branches; i++) {
     states.push({
       'position': {
@@ -212,5 +222,3 @@ window.onkeydown = function(event) {
       break;
   }
 };
-
-

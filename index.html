@@ -2,18 +2,37 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Walk.js &mdash; Pseudo-random walk traversal</title>
+    <link rel="stylesheet" href="grid.css">
     <style>
-      * {
-        margin: 0;
-        padding: 0;
+      body {
+        font: 100%/1.5 Arial, Helvetica, sans-serif;
       }
       
-      [controls] {
-        padding-top: 1.5em;
+      a {
+        text-decoration: none;
+        color: #913149;
+      }
+      
+      h3 { line-height: 1; }
+      
+      p {
+        font-size: .9rem;
+        margin-bottom: 1em;
+      }
+      
+      label { text-align: right; }
+      
+      [data-controls] {
+        width: 25%;
+        padding-top: 1em;
         padding-left: 1.5em;
         position: absolute;
         top: 0;
         left: 0;
+      }
+      
+      [data-description] {
+        margin-top: 1.5em;
       }
       
       @media only screen 
@@ -22,7 +41,7 @@
         [controls] { display: none };
       }
       
-      [red] {
+      [data-red] {
         color: #913149;
       }
     </style>
@@ -30,69 +49,69 @@
   </head>
   <body onload="ready();">
     <canvas id="walk"></canvas>
-    <div controls>
-      <h3 red>Walk.js</h3>
-      Pseudo-random walk traversal.<br>
-      Every step remembers the properties of its predecessor.<br>
-      Traversal is forced when maximum call stack<br>
-      is exceeded.<br>
-      <br>
-      <a href="https://github.com/mateogianolio/walk-js/" red>Visit the GitHub page</a> to grab the source.
-      <br>
-      <br>
-      <!-- TODO:  clean up this mess -->
-      <label for="branch">branches</label><br>
-      <input name="branch" type="range" min="-3" max="6" step="1" value="0"
-             onchange="branches = parseInt(value) + 4; reset();"
-             oninput="branches = parseInt(value) + 4; reset();">
-      <br>
-      <label for="xbias">bias<sub>x</sub></label><br>
-      <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-             onchange="states.forEach(function(state) { state.direction.bias.x = value; });"
-             oninput="states.forEach(function(state) { state.direction.bias.x = value; });">
-      <br>
-      <label for="ybias">bias<sub>y</sub></label><br>
-      <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-             onchange="states.forEach(function(state) { state.direction.bias.y = value; });"
-             oninput="states.forEach(function(state) { state.direction.bias.y = value; });"> 
-      <br>
-      <br>
-      <label for="size">size</label><br>
-      <input name="size" type="range" min="0" max="8" step="2" value="0"
-             onchange="states.forEach(function(state) { state.size = parseInt(value) + 2; });" 
-             oninput="states.forEach(function(state) { state.size = parseInt(value) + 2; });">
-      <br>
-      <label for="step">step</label><br>
-      <input name="step" type="range" min="0" max="8" step="2" value="0"
-             onchange="states.forEach(function(state) { state.step = parseInt(value) + 8; });"
-             oninput="states.forEach(function(state) { state.step = parseInt(value) + 8; });">
-      <br>
-      <br>
-      <label for="red">red</label> 
-      <input name="red" type="range" min="0" max="255" step="1" value="0"
-             onchange="states.forEach(function(state) { state.color[0] = value; });"
-             oninput="states.forEach(function(state) { state.color[0] = value; });">
-      <br>
-      <label for="green">green</label> 
-      <input name="green" type="range" min="0" max="255" step="1" value="0"
-             onchange="states.forEach(function(state) { state.color[1] = value; });"
-             oninput="states.forEach(function(state) { state.color[1] = value; });">
-      <br>
-      <label for="blue">blue</label> 
-      <input name="blue" type="range" min="0" max="255" step="1" value="0"
-             onchange="states.forEach(function(state) { state.color[2] = value; });"
-             oninput="states.forEach(function(state) { state.color[2] = value; });">
-      <br>
-      <br>
-      <div id="callstack">call stack: <span red>0</span></div>
-      <div id="traversal"></div>
-      <br>
-      <div onclick="reset();">(press <b>r</b> or click here to reset)</div>
-      <div onclick="toggle();">(press <b>t</b> or click here to toggle traversal)</div>
-      <div onclick="running = !running;">(press <b>space</b> or click here to toggle pause)</div>
-      <br>
+    <div data-controls>
+      <div data-grid>
+        <div data-size="1/4">
+          <h3><span data-red>Walk</span>.js</h3>
+        </div>
+        <div data-size="3/4">
+          <h3>Pseudo-random walk traversal.</h3>
+        </div>
+        <p data-description data-size="1">
+          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.
+        </p>
+        <p data-size="1">
+          <a href="https://github.com/mateogianolio/walk-js/" red>Visit the GitHub page</a> to grab the source.
+        </p>
+        
+        <label data-size="1/4" for="branch">branches</label>
+        <input data-size="3/4" name="branch" type="range" min="-3" max="6" step="1" value="0"
+               onchange="branches = parseInt(value) + 4; reset();"
+               oninput="branches = parseInt(value) + 4; reset();">
+        <br><br>
+        <label data-size="1/4" for="xbias">bias<sub>x</sub></label>
+        <input data-size="3/4" name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+               onchange="states.set('direction.bias.x', value);"
+               oninput="states.set('direction.bias.x', value);">
+        
+        <label data-size="1/4" for="ybias">bias<sub>y</sub></label>
+        <input data-size="3/4" name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+               onchange="states.set('direction.bias.y', value);"
+               oninput="states.set('direction.bias.y', value);"> 
+        <br><br>
+        <label data-size="1/4" for="size">size</label>
+        <input data-size="3/4" name="size" type="range" min="0" max="8" step="2" value="0"
+               onchange="states.set('size', parseInt(value) + 2);" 
+               oninput="states.set('size', parseInt(value) + 2);">
+        
+        <label data-size="1/4" for="step">step</label>
+        <input data-size="3/4" name="step" type="range" min="0" max="8" step="2" value="0"
+               onchange="states.set('step', parseInt(value) + 8);"
+               oninput="states.set('step', parseInt(value) + 8);">
+        <br><br>
+        <label data-size="1/4" for="red">red</label> 
+        <input data-size="3/4" name="red" type="range" min="0" max="255" step="1" value="0"
+               onchange="states.set('color.0', value);"
+               oninput="states.set('color.0', value);">
+        
+        <label data-size="1/4" for="green">green</label> 
+        <input data-size="3/4" name="green" type="range" min="0" max="255" step="1" value="0"
+               onchange="states.set('color.1', value);"
+               oninput="states.set('color.1', value);">
+        
+        <label data-size="1/4" for="blue">blue</label> 
+        <input data-size="3/4" name="blue" type="range" min="0" max="255" step="1" value="0"
+               onchange="states.set('color.2', value);"
+               oninput="states.set('color.2', value);">
+        <br><br>
+        <div data-size="1/2" id="callstack">call stack: <span data-red>0</span></div>
+        <div data-size="1/2" id="traversal"></div>
+        <br><br>
+        <div data-size="1" onclick="reset();">(press <span data-red>r</span> or click here to reset)</div>
+        <div data-size="1" onclick="toggle();">(press <span data-red>t</span> or click here to toggle traversal)</div>
+        <div data-size="1" onclick="running = !running;">(press <span data-red>space</span> or click here to toggle pause)</div>
+      </div>
     </div>
-    
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
