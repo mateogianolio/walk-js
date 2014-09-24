@@ -23,7 +23,7 @@
       label { text-align: right; }
       
       [data-controls] {
-        width: 25%;
+        width: 30%;
         padding-top: 1em;
         padding-left: 1.5em;
         position: absolute;
@@ -31,14 +31,16 @@
         left: 0;
       }
       
+      @media only screen and (max-width: 960px) {
+        [data-controls] { width: 50%; }
+      }
+      
       [data-description] {
         margin-top: 1.5em;
       }
       
-      @media only screen 
-      and (min-device-width: 320px) 
-      and (max-device-width: 480px) {
-        [controls] { display: none };
+      @media only screen and (max-width: 480px) {
+        [data-controls] { width: 90%; };
       }
       
       [data-red] {
@@ -50,7 +52,7 @@
   <body onload="ready();">
     <canvas id="walk"></canvas>
     <div data-controls>
-      <div data-grid>
+      <div data-grid="collapse">
         <div data-size="1/4">
           <h3><span data-red>Walk</span>.js</h3>
         </div>
@@ -63,7 +65,8 @@
         <p data-size="1">
           <a href="https://github.com/mateogianolio/walk-js/" red>Visit the GitHub page</a> to grab the source.
         </p>
-        
+      </div>
+      <div data-grid>
         <label data-size="1/4" for="branch">branches</label>
         <input data-size="3/4" name="branch" type="range" min="-3" max="6" step="1" value="0"
                onchange="branches = parseInt(value) + 4; reset();"
