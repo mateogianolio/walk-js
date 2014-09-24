@@ -16,35 +16,29 @@
       h3 { line-height: 1; }
       
       p {
-        font-size: .9rem;
+        font-size: 90%;
         margin-bottom: 1em;
       }
       
-      label { text-align: right; }
+      label, #callstack, [data-logo] { text-align: right; }
       
       [data-controls] {
         width: 30%;
-        padding-top: 1em;
-        padding-left: 1.5em;
         position: absolute;
-        top: 0;
-        left: 0;
-      }
-      
-      @media only screen and (max-width: 960px) {
-        [data-controls] { width: 50%; }
+        top: 1em;
+        left: 1em;
       }
       
       [data-description] {
         margin-top: 1.5em;
       }
       
-      @media only screen and (max-width: 480px) {
-        [data-controls] { width: 90%; };
-      }
+      [data-red] { color: #913149; }
       
-      [data-red] {
-        color: #913149;
+      @media screen and (max-width: 960px) {
+        body { font-size: 80%; }
+        [data-logo] { text-align: left; }
+        [data-controls] { width: 50%; }
       }
     </style>
     <script type="text/javascript" src="walk.js"></script>
@@ -54,7 +48,7 @@
     <div data-controls>
       <div data-grid="collapse">
         <div data-size="1/4">
-          <h3><span data-red>Walk</span>.js</h3>
+          <h3 data-logo><span data-red>Walk</span>.js</h3>
         </div>
         <div data-size="3/4">
           <h3>Pseudo-random walk traversal.</h3>
@@ -107,12 +101,14 @@
                onchange="states.set('color.2', value);"
                oninput="states.set('color.2', value);">
         <br><br>
-        <div data-size="1/2" id="callstack">call stack: <span data-red>0</span></div>
-        <div data-size="1/2" id="traversal"></div>
+        <div data-size="1/4" id="callstack">call stack: <span data-red>0</span></div>
+        <div data-size="3/4" id="traversal"></div>
         <br><br>
-        <div data-size="1" onclick="reset();">(press <span data-red>r</span> or click here to reset)</div>
-        <div data-size="1" onclick="toggle();">(press <span data-red>t</span> or click here to toggle traversal)</div>
-        <div data-size="1" onclick="running = !running;">(press <span data-red>space</span> or click here to toggle pause)</div>
+        <p data-size="1">
+          <a href="#" onclick="reset();">(press <b>r</b> or click here to reset)</a><br>
+          <a href="#" onclick="toggle();">(press <b>t</b> or click here to toggle traversal)</a><br>
+          <a href="#" onclick="running = !running;">(press <b>space</b> or click here to toggle pause)</a><br>
+        </p>
       </div>
     </div>
     <script>
@@ -123,7 +119,6 @@
     
       ga('create', 'UA-41408481-4', 'auto');
       ga('send', 'pageview');
-    
     </script>
   </body>
 </html>

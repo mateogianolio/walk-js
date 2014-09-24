@@ -20,7 +20,7 @@ function ready() {
 
       obj[attribute[i]] = value;
     });
-  }
+  };
   
   branches = 4;
   for(i = 0; i < branches; i++) {
@@ -75,10 +75,10 @@ function update() {
     }
     
     flip = Math.round(Math.random() - state.direction.bias.x);
-    state.direction.x = Math.pow(-1, flip);
+    state.direction.x = flip == 1 ? 1 : -1;
 
     flip = Math.round(Math.random() - state.direction.bias.y);
-    state.direction.y = Math.pow(-1, flip);
+    state.direction.y = flip == 0 ? -1 : 1;
 
     state.position.x += state.step * state.direction.x;
     state.position.y += state.step * state.direction.y;
@@ -91,14 +91,17 @@ function update() {
 
     if (state.position.x > canvas.width) {
       state.position.x = canvas.width - state.step;
+      state.direction.x *= -1;
     }
 
     if (state.position.y < 0) {
       state.position.y = 0;
+      state.direction.y *= -1;
     }
 
     if (state.position.y > canvas.height) {
       state.position.y = canvas.height - state.step;
+      state.direction.y *= -1;
     }
   });
 
@@ -106,21 +109,8 @@ function update() {
 }
 
 function paint() {
-  if (!traversal) {
-    // walking about..
-    states.forEach(function(state) {
-      context.lineWidth = state.size;
-      context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
-
-      context.beginPath();
-      context.moveTo(state.parent.position.x, state.parent.position.y);
-      context.lineTo(state.position.x, state.position.y);
-      context.stroke();
-      context.closePath();
-    });
-    
-    document.getElementById('callstack').innerHTML = 'call stack: <span data-red>' + count++ + '</span>';
-  } else {
+  switch(traversal) {
+  case true:
     // traversing..
     states.forEach(function(state, index, obj) {
       if(state.parent == null) {
@@ -140,7 +130,23 @@ function paint() {
       obj[index] = state.parent;
     });
     
-    document.getElementById('callstack').innerHTML = 'call stack: <span data-red>' + count-- + '</span>';
+    document.getElementById('callstack').innerHTML = 'call stack<br><span data-red>' + count-- + '</span>';
+    break;
+  case false: 
+    // walking about..
+    states.forEach(function(state) {
+      context.lineWidth = state.size;
+      context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
+
+      context.beginPath();
+      context.moveTo(state.parent.position.x, state.parent.position.y);
+      context.lineTo(state.position.x, state.position.y);
+      context.stroke();
+      context.closePath();
+    });
+    
+    document.getElementById('callstack').innerHTML = 'call stack<br><span data-red>' + count++ + '</span>';
+    break;
   }
 }
 
@@ -170,10 +176,10 @@ function reset() {
   
   count = 0;
   
-  var state;
-  while(state = states.pop())
+  states.forEach(function(state) {
     while(state.parent != null)
       state = state.parent;
+  });
   
   for(i = 0; i < branches; i++) {
     states.push({
