@@ -181,6 +181,19 @@ function reset() {
       state = state.parent;
   });
   
+  // TODO:  make State() interface and move to separate file
+  //        instead of repeating code
+  states = [];
+  states.set = function(attribute, value) {
+    attribute = attribute.split('.');
+    this.forEach(function(obj) {
+      for (i = 0; i < attribute.length - 1; i++)
+        obj = obj[attribute[i]];
+
+      obj[attribute[i]] = value;
+    });
+  };
+  
   for(i = 0; i < branches; i++) {
     states.push({
       'position': {
