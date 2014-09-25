@@ -1,5 +1,5 @@
 var canvas, context, rate, interval,
-    states = [], branches = 4, stack = 0,
+    states = [], branches = 4,
     traversal = false, pause = false;
 
 // helper method to set attributes in an array of objects
@@ -51,12 +51,12 @@ function loop() {
       toggle();
       return;
     }
-
+    
     state.scatter();
     state.update(0, 0, canvas.width, canvas.height);
-    
-    paint();
   });
+  
+  paint();
 }
 
 function paint() {
@@ -106,8 +106,6 @@ function reset() {
   if (traversal)
     toggle();
   
-  stack = 0;
-  
   states = [];
   for(i = 0; i < branches; i++) {
     states.push(new State({
@@ -135,7 +133,10 @@ window.onkeydown = function(event) {
       break;
     case 84:
       // 't'
-      toggle();
+      if(traversal)
+        reset();
+      else
+        toggle();
       break;
   }
 };
