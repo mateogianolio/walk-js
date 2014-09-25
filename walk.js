@@ -130,7 +130,7 @@ function paint() {
       obj[index] = state.parent;
     });
     
-    document.getElementById('callstack').innerHTML = 'call stack<br><span data-red>' + count-- + '</span>';
+    document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count-- + '</span>';
     break;
   case false: 
     // walking about..
@@ -145,7 +145,7 @@ function paint() {
       context.closePath();
     });
     
-    document.getElementById('callstack').innerHTML = 'call stack<br><span data-red>' + count++ + '</span>';
+    document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count++ + '</span>';
     break;
   }
 }
@@ -162,8 +162,6 @@ function toggle() {
     input.value = 0;
     input.disabled = !input.disabled;
   }
-  
-  document.getElementById('traversal').innerHTML = traversal ? '<span data-red>traversing</span>...' : '';
 }
 
 function clear() {

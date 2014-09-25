@@ -4,9 +4,7 @@
     <title>Walk.js &mdash; Pseudo-random walk traversal</title>
     <link rel="stylesheet" href="grid.css">
     <style>
-      body {
-        font: 100%/1.5 Arial, Helvetica, sans-serif;
-      }
+      body { font: 100%/1.5 Arial, Helvetica, sans-serif; }
       
       a {
         text-decoration: none;
@@ -20,6 +18,8 @@
         margin-bottom: 1em;
       }
       
+      input { padding: .4em; }
+      
       .twitter-share-button { margin-right: -2.6em; }
       label, #callstack, [data-logo], [data-buttons] { text-align: right; }
       
@@ -30,10 +30,7 @@
         left: 1em;
       }
       
-      [data-buttons], [data-description] {
-        margin-top: 1.5em;
-      }
-      
+      [data-buttons], [data-description] { margin-top: 1.5em; }
       [data-red] { color: #913149; }
       
       @media screen and (max-width: 960px) {
@@ -63,8 +60,7 @@
           <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
         </p>
         <p data-description data-size="3/4">
-          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.<br><br>
-          <a href="https://github.com/mateogianolio/walk-js/" red>Visit the GitHub page</a> to grab the source.
+          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.<br>
         </p>
       </div>
       <div data-grid>
@@ -75,13 +71,13 @@
                  oninput="branches = parseInt(value) + 4; reset();">
         </div>
         <br><br>
-        <label data-size="1/4" for="xbias">bias<sub>x</sub></label>
+        <label data-size="1/4" for="xbias">bias (x)</label>
         <div data-size="3/4">
           <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
                  onchange="states.set('direction.bias.x', value);"
                  oninput="states.set('direction.bias.x', value);">
         </div>
-        <label data-size="1/4" for="ybias">bias<sub>y</sub></label>
+        <label data-size="1/4" for="ybias">bias (y)</label>
         <div data-size="3/4">
           <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
                  onchange="states.set('direction.bias.y', value);"
@@ -119,13 +115,12 @@
                  onchange="states.set('color.2', value);"
                  oninput="states.set('color.2', value);">
         </div>
-        <br><br>
-        <div data-size="1/4" id="callstack">call stack: <span data-red>0</span></div>
-        <div data-size="3/4" id="traversal"></div>
-        <br>
       </div>
+      <br>
       <div data-grid="collapse">
-        <p data-size="1/4"></p>
+        <div data-size="1/4">
+          <div id="callstack">stack: <span data-red>0</span></div>
+        </div>
         <p data-size="3/4">
           <a href="#" onclick="reset();">(press <b>r</b> or click here to reset)</a><br>
           <a href="#" onclick="toggle();">(press <b>t</b> or click here to toggle traversal)</a><br>
