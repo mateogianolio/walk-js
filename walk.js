@@ -54,9 +54,9 @@ function loop() {
 
     state.scatter();
     state.update(0, 0, canvas.width, canvas.height);
-  });
     
-  paint();
+    paint();
+  });
 }
 
 function paint() {
