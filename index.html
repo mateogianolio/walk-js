@@ -4,7 +4,7 @@
     <title>Walk.js &mdash; Pseudo-random walk traversal</title>
     <link rel="stylesheet" href="grid.css">
     <style>
-      body { font: 100%/1.5 Arial, Helvetica, sans-serif; }
+      body { font: 95%/1.5 Arial, Helvetica, sans-serif; }
       
       a {
         text-decoration: none;
@@ -12,15 +12,12 @@
       }
       
       h3 { line-height: 1; }
-      
-      p {
-        font-size: 90%;
-        margin-bottom: 1em;
-      }
+      p { margin-bottom: 1em; }
       
       input { padding: .4em; }
+      input[type="radio"] { margin: 0 1em 0 .5em; }
       
-      .twitter-share-button { margin-right: -2.6em; }
+      .twitter-share-button { margin-right: -2.5em; }
       label, #callstack, [data-logo], [data-buttons] { text-align: right; }
       
       [data-controls] {
@@ -60,61 +57,69 @@
           <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
         </p>
         <p data-description data-size="3/4">
-          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.<br>
+          Every step remembers the properties of its predecessor. When traversal starts the screen is cleared and everything is drawn backwards. Traversal is forced when maximum call stack is exceeded.<br>
         </p>
       </div>
       <div data-grid>
         <label data-size="1/4" for="branch">branches</label>
         <div data-size="3/4">
-          <input name="branch" type="range" min="-3" max="6" step="1" value="0"
+          <input name="branch" type="range" min="-3" max="20" step="1" value="0"
                  onchange="branches = parseInt(value) + 4; reset();"
                  oninput="branches = parseInt(value) + 4; reset();">
         </div>
         <br><br>
-        <label data-size="1/4" for="xbias">bias (x)</label>
-        <div data-size="3/4">
-          <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-                 onchange="states.set('direction.bias.x', value);"
-                 oninput="states.set('direction.bias.x', value);">
-        </div>
-        <label data-size="1/4" for="ybias">bias (y)</label>
-        <div data-size="3/4">
-          <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-                 onchange="states.set('direction.bias.y', value);"
-                 oninput="states.set('direction.bias.y', value);">
-        </div>
-        <br><br>
-        <label data-size="1/4" for="size">size</label>
-        <div data-size="3/4">
-          <input name="size" type="range" min="0" max="8" step="2" value="0"
-                 onchange="states.set('size', parseInt(value) + 2);" 
-                 oninput="states.set('size', parseInt(value) + 2);">
-        </div>
-        <label data-size="1/4" for="step">step</label>
-        <div data-size="3/4">
-          <input name="step" type="range" min="0" max="8" step="2" value="0"
-                 onchange="states.set('step', parseInt(value) + 8);"
-                 oninput="states.set('step', parseInt(value) + 8);">
-        </div>
-        <br><br>
-        <label data-size="1/4" for="red">red</label>
-        <div data-size="3/4">
-          <input name="red" type="range" min="0" max="255" step="1" value="0"
-                 onchange="states.set('color.0', value);"
-                 oninput="states.set('color.0', value);">
-        </div>
-        <label data-size="1/4" for="green">green</label> 
-        <div data-size="3/4">
-          <input name="green" type="range" min="0" max="255" step="1" value="0"
-                 onchange="states.set('color.1', value);"
-                 oninput="states.set('color.1', value);">
-        </div>
-        <label data-size="1/4" for="blue">blue</label> 
-        <div data-size="3/4">
-          <input name="blue" type="range" min="0" max="255" step="1" value="0"
-                 onchange="states.set('color.2', value);"
-                 oninput="states.set('color.2', value);">
-        </div>
+        <form id="controls">
+          <label data-size="1/4" for="xbias">bias (x)</label>
+          <div data-size="3/4">
+            <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+                   onchange="states.set('direction.bias.x', value);"
+                   oninput="states.set('direction.bias.x', value);">
+          </div>
+          <label data-size="1/4" for="ybias">bias (y)</label>
+          <div data-size="3/4">
+            <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+                   onchange="states.set('direction.bias.y', value);"
+                   oninput="states.set('direction.bias.y', value);">
+          </div>
+          <br><br>
+          <label data-size="1/4" for="size">size</label>
+          <div data-size="3/4">
+            <input name="size" type="range" min="0" max="8" step="2" value="0"
+                   onchange="states.set('size', parseInt(value) + 2);" 
+                   oninput="states.set('size', parseInt(value) + 2);">
+          </div>
+          <label data-size="1/4" for="step">step</label>
+          <div data-size="3/4">
+            <input name="step" type="range" min="0" max="8" step="2" value="0"
+                   onchange="states.set('step', parseInt(value) + 8);"
+                   oninput="states.set('step', parseInt(value) + 8);">
+          </div>
+          <br><br>
+          <label data-size="1/4" for="red">red</label>
+          <div data-size="3/4">
+            <input name="red" type="range" min="0" max="255" step="1" value="0"
+                   onchange="states.set('color.0', value);"
+                   oninput="states.set('color.0', value);">
+          </div>
+          <label data-size="1/4" for="green">green</label> 
+          <div data-size="3/4">
+            <input name="green" type="range" min="0" max="255" step="1" value="0"
+                   onchange="states.set('color.1', value);"
+                   oninput="states.set('color.1', value);">
+          </div>
+          <label data-size="1/4" for="blue">blue</label> 
+          <div data-size="3/4">
+            <input name="blue" type="range" min="0" max="255" step="1" value="0"
+                   onchange="states.set('color.2', value);"
+                   oninput="states.set('color.2', value);">
+          </div>
+          <br><br>
+          <label data-size="1/4" for="shape">shape</label>
+          <div data-size="3/4">
+            <input name="shape" type="radio" value="line" onclick="states.set('shape', value);" checked> line<br>
+            <input name="shape" type="radio" value="square" onclick="states.set('shape', value);"> square
+          </div>
+        </form>
       </div>
       <br>
       <div data-grid="collapse">

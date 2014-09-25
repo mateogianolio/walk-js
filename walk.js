@@ -1,5 +1,5 @@
 var canvas, context,
-    states, branches, rate, interval, flip,
+    states, flip, branches, rate, interval,
     count = 0,
     traversal = false,
     running = true;
@@ -31,6 +31,7 @@ function ready() {
       },
       'step': 8,
       'size': 2,
+      'shape': 'line',
       'direction': {
         'x': 0,
         'y': 1,
@@ -119,15 +120,20 @@ function paint() {
         reset();
         return;
       }
+      
+      if (state.shape == 'line') {
+        context.lineWidth = state.parent.size;
+        context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
 
-      context.lineWidth = state.parent.size;
-      context.strokeStyle = 'rgba(' + state.color[0] + ', ' + state.color[1] + ', ' + state.color[2] + ', 1)';
-
-      context.beginPath();
-      context.moveTo(state.parent.position.x, state.parent.position.y);
-      context.lineTo(state.position.x, state.position.y);
-      context.stroke();
-      context.closePath();
+        context.beginPath();
+        context.moveTo(state.parent.position.x, state.parent.position.y);
+        context.lineTo(state.position.x, state.position.y);
+        context.stroke();
+        context.closePath();
+      } else {
+        context.fillStyle = 'rgba(' + state.color.join(', ') + ')';
+        context.fillRect(state.position.x, state.position.y, state.size * 2, state.size * 2);
+      }
 
       states[index] = state.parent;
     });
@@ -137,16 +143,21 @@ function paint() {
   case false: 
     // walking about..
     states.forEach(function(state) {
-      context.lineWidth = state.size;
-      context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
+      if (state.shape == 'line') {
+        context.lineWidth = state.parent.size;
+        context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
 
-      context.beginPath();
-      context.moveTo(state.parent.position.x, state.parent.position.y);
-      context.lineTo(state.position.x, state.position.y);
-      context.stroke();
-      context.closePath();
+        context.beginPath();
+        context.moveTo(state.parent.position.x, state.parent.position.y);
+        context.lineTo(state.position.x, state.position.y);
+        context.stroke();
+        context.closePath();
+      } else {
+        context.fillStyle = 'rgba(' + state.color.join(', ') + ')';
+        context.fillRect(state.position.x, state.position.y, state.size * 2, state.size * 2);
+      }
     });
-    
+      
     document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count++ + '</span>';
     break;
   }
@@ -155,15 +166,11 @@ function paint() {
 function toggle() {
   traversal = !traversal;
   
+  clear();
+  
   // TODO:  currently the input fields are not updated to match
   //        the state at which the toggling took place
-  var inputs = document.getElementsByTagName('INPUT');
-  var input;
-  for(i = 0; i < inputs.length; i++) {
-    input = inputs[i];
-    input.value = 0;
-    input.disabled = !input.disabled;
-  }
+  document.getElementById('controls').reset();
 }
 
 function clear() {
@@ -202,6 +209,7 @@ function reset() {
       },
       'step': 8,
       'size': 2,
+      'shape': 'line',
       'direction': {
         'x': 0,
         'y': 1,
