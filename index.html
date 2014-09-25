@@ -36,6 +36,7 @@
         [data-controls] { width: 50%; }
       }
     </style>
+    <script type="text/javascript" src="state.js"></script>
     <script type="text/javascript" src="walk.js"></script>
   </head>
   <body onload="ready();">
@@ -72,14 +73,14 @@
           <label data-size="1/4" for="xbias">bias (x)</label>
           <div data-size="3/4">
             <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-                   onchange="states.set('direction.bias.x', value);"
-                   oninput="states.set('direction.bias.x', value);">
+                   onchange="states.set('bias.x', value);"
+                   oninput="states.set('bias.x', value);">
           </div>
           <label data-size="1/4" for="ybias">bias (y)</label>
           <div data-size="3/4">
             <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-                   onchange="states.set('direction.bias.y', value);"
-                   oninput="states.set('direction.bias.y', value);">
+                   onchange="states.set('bias.y', value);"
+                   oninput="states.set('bias.y', value);">
           </div>
           <br><br>
           <label data-size="1/4" for="size">size</label>
@@ -123,13 +124,12 @@
       </div>
       <br>
       <div data-grid="collapse">
-        <div data-size="1/4">
-          <div id="callstack">stack: <span data-red>0</span></div>
-        </div>
+        <p data-size="1/4">
+        </p>
         <p data-size="3/4">
           <a href="#" onclick="reset();">(press <b>r</b> or click here to reset)</a><br>
           <a href="#" onclick="toggle();">(press <b>t</b> or click here to toggle traversal)</a><br>
-          <a href="#" onclick="running = !running;">(press <b>space</b> or click here to toggle pause)</a><br>
+          <a href="#" onclick="pause = !pause;">(press <b>space</b> or click here to toggle pause)</a><br>
         </p>
       </div>
     </div>

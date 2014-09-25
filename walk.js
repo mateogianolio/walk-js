@@ -1,9 +1,18 @@
-var canvas, context,
-    states, flip, branches, rate, interval,
-    count = 0,
-    traversal = false,
-    running = true;
-        
+var canvas, context, rate, interval,
+    states = [], branches = 4, stack = 0,
+    traversal = false, pause = false;
+
+// helper method to set attributes in an array of objects
+Array.prototype.set = function(attribute, value) {
+  attribute = attribute.split('.');
+  this.forEach(function(obj) {
+    for (i = 0; i < attribute.length - 1; i++)
+      obj = obj[attribute[i]];
+    
+    obj[attribute[i]] = value;
+  });
+};
+
 function ready() {
   canvas = document.getElementById('walk');
   canvas.width = window.innerWidth;
@@ -11,166 +20,83 @@ function ready() {
 
   context = canvas.getContext('2d');
   
-  states = [];
-  states.set = function(attribute, value) {
-    attribute = attribute.split('.');
-    this.forEach(function(obj) {
-      for (i = 0; i < attribute.length - 1; i++)
-        obj = obj[attribute[i]];
-
-      obj[attribute[i]] = value;
-    });
-  };
-  
   branches = 4;
-  for(i = 0; i < branches; i++) {
-    states.push({
-      'position': {
-        'x': Math.round(canvas.width / 2),
-        'y': Math.round(canvas.height / 2),
+  for(i = 0; i < branches; i++)
+    states.push(new State({
+      position: {
+        x: Math.round(canvas.width / 2),
+        y: Math.round(canvas.height / 2)
       },
-      'step': 8,
-      'size': 2,
-      'shape': 'line',
-      'direction': {
-        'x': 0,
-        'y': 1,
-        'bias': {
-          'x': 0,
-          'y': 0
-        }
-      },
-      'color': [
-        0,
-        0,
-        0,
-        .1
-      ],
-      'parent': null
-    });
-  }
+      color: [0, 0, 0, .1]
+    }));
   
-  rate = 20;
-
-  interval = setInterval(function() { update(); }, rate);
+  rate = 10;
+  interval = setInterval(function() { loop(); }, rate);
 }
 
-function update() {
-  if (!running)
+function loop() {
+  if (pause)
     return;
-          
+  
   if (traversal) {
     paint();
     return;
   }
 
-  states.forEach(function(state) {
+  states.forEach(function(state, index) {
     try {
       state.parent = JSON.parse(JSON.stringify(state));
     } catch (error) {
       // maximum call stack size reached, force traversal
       toggle();
-      
-      // hack to break out of foreach
-      throw {};
+      return;
     }
-    
-    flip = Math.round(Math.random() - state.direction.bias.x);
-    state.direction.x = flip > .5 ? -1 : 1;
 
-    flip = Math.round(Math.random() - state.direction.bias.y);
-    state.direction.y = flip > .5 ? -1 : 1;
-
-    state.position.x += state.step * state.direction.x;
-    state.position.y += state.step * state.direction.y;
-
-    // TODO:  move to separate function
-    if (state.position != state.parent.position) {
-      if (state.position.x < 0) {
-        state.position.x = 0;
-        state.direction.x *= -1;
-      }
-
-      if (state.position.x > canvas.width) {
-        state.position.x = canvas.width - state.step;
-        state.direction.x *= -1;
-      }
-
-      if (state.position.y < 0) {
-        state.position.y = 0;
-        state.direction.y *= -1;
-      }
-
-      if (state.position.y > canvas.height) {
-        state.position.y = canvas.height - state.step;
-        state.direction.y *= -1;
-      }
-    }
+    state.scatter();
+    state.update(0, 0, canvas.width, canvas.height);
   });
-
+    
   paint();
 }
 
 function paint() {
-  switch(traversal) {
-  case true:
-    // traversing..
-    states.forEach(function(state, index) {
+  states.forEach(function(state, index) {
+    if(traversal) {
       if(state.parent == null) {
         reset();
         return;
       }
       
-      if (state.shape == 'line') {
-        context.lineWidth = state.parent.size;
-        context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
-
-        context.beginPath();
-        context.moveTo(state.parent.position.x, state.parent.position.y);
-        context.lineTo(state.position.x, state.position.y);
-        context.stroke();
-        context.closePath();
-      } else {
-        context.fillStyle = 'rgba(' + state.color.join(', ') + ')';
-        context.fillRect(state.position.x, state.position.y, state.size * 2, state.size * 2);
-      }
-
       states[index] = state.parent;
-    });
+    }
     
-    document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count-- + '</span>';
-    break;
-  case false: 
-    // walking about..
-    states.forEach(function(state) {
-      if (state.shape == 'line') {
-        context.lineWidth = state.parent.size;
-        context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
+    switch (state.shape) {
+    case 'line':
+      context.strokeStyle = 'rgba(' + state.color.join(', ') + ')';
+      context.lineWidth = state.size;
 
-        context.beginPath();
-        context.moveTo(state.parent.position.x, state.parent.position.y);
-        context.lineTo(state.position.x, state.position.y);
-        context.stroke();
-        context.closePath();
-      } else {
-        context.fillStyle = 'rgba(' + state.color.join(', ') + ')';
-        context.fillRect(state.position.x, state.position.y, state.size * 2, state.size * 2);
-      }
-    });
-      
-    document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count++ + '</span>';
-    break;
-  }
+      context.beginPath();
+      context.moveTo(state.parent.position.x, state.parent.position.y);
+      context.lineTo(state.position.x, state.position.y);
+      context.closePath();
+      context.stroke();
+      break;
+    case 'square':
+      context.fillStyle = 'rgba(' + state.color.join(', ') + ')';
+      context.fillRect(state.position.x, state.position.y, 2 * state.size, 2 * state.size);
+      break;
+    }
+  });
 }
 
 function toggle() {
   traversal = !traversal;
   
-  clear();
-  
   // TODO:  currently the input fields are not updated to match
   //        the state at which the toggling took place
   document.getElementById('controls').reset();
+  
+  clear();
 }
 
 function clear() {
@@ -178,54 +104,20 @@ function clear() {
 }
 
 function reset() {
-  if(traversal)
+  if (traversal)
     toggle();
   
-  count = 0;
+  stack = 0;
   
-  states.forEach(function(state) {
-    while(state.parent != null)
-      state = state.parent;
-  });
-  
-  // TODO:  make State() interface and move to separate file
-  //        instead of repeating code
   states = [];
-  states.set = function(attribute, value) {
-    attribute = attribute.split('.');
-    this.forEach(function(obj) {
-      for (i = 0; i < attribute.length - 1; i++)
-        obj = obj[attribute[i]];
-
-      obj[attribute[i]] = value;
-    });
-  };
-  
   for(i = 0; i < branches; i++) {
-    states.push({
-      'position': {
-        'x': Math.round(canvas.width / 2),
-        'y': Math.round(canvas.height / 2),
+    states.push(new State({
+      position: {
+        x: Math.round(canvas.width / 2),
+        y: Math.round(canvas.height / 2)
       },
-      'step': 8,
-      'size': 2,
-      'shape': 'line',
-      'direction': {
-        'x': 0,
-        'y': 1,
-        'bias': {
-          'x': 0,
-          'y': 0
-        }
-      },
-      'color': [
-        0,
-        0,
-        0,
-        .1
-      ],
-      'parent': null
-    });
+      color: [0, 0, 0, .1]
+    }));
   }
   
   clear();
@@ -233,11 +125,10 @@ function reset() {
   
 window.onkeydown = function(event) {
   event = event || window.event;
-          
   switch (event.keyCode) {
     case 32:
       // space
-      running = !running;
+      pause = !pause;
       break;
     case 82:
       // 'r'
