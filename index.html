@@ -20,7 +20,8 @@
         margin-bottom: 1em;
       }
       
-      label, #callstack, [data-logo] { text-align: right; }
+      .twitter-share-button { margin-right: -2.6em; }
+      label, #callstack, [data-logo], [data-buttons] { text-align: right; }
       
       [data-controls] {
         width: 30%;
@@ -29,7 +30,7 @@
         left: 1em;
       }
       
-      [data-description] {
+      [data-buttons], [data-description] {
         margin-top: 1.5em;
       }
       
@@ -37,7 +38,7 @@
       
       @media screen and (max-width: 960px) {
         body { font-size: 80%; }
-        [data-logo] { text-align: left; }
+        [data-logo], [data-buttons] { text-align: left; }
         [data-controls] { width: 50%; }
       }
     </style>
@@ -53,58 +54,79 @@
         <div data-size="3/4">
           <h3>Pseudo-random walk traversal.</h3>
         </div>
-        <p data-description data-size="1">
-          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.
+        <p data-size="1/4" data-buttons>
+          <a href="https://twitter.com/share" class="twitter-share-button" data-via="mateogianolio" data-count="horizontal">Tweet</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+          <br>
+          <a href="https://github.com/mateogianolio/walk-js" class="github-button" data-icon="octicon-star"
+  data-count-href="/mateogianolio/walk-js/stargazers" data-count-api="/repos/mateogianolio/walk-js#stargazers_count">Star</a>
+          <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
         </p>
-        <p data-size="1">
+        <p data-description data-size="3/4">
+          Every step remembers the properties of its predecessor. Traversal is forced when maximum call stack is exceeded.<br><br>
           <a href="https://github.com/mateogianolio/walk-js/" red>Visit the GitHub page</a> to grab the source.
         </p>
       </div>
       <div data-grid>
         <label data-size="1/4" for="branch">branches</label>
-        <input data-size="3/4" name="branch" type="range" min="-3" max="6" step="1" value="0"
-               onchange="branches = parseInt(value) + 4; reset();"
-               oninput="branches = parseInt(value) + 4; reset();">
+        <div data-size="3/4">
+          <input name="branch" type="range" min="-3" max="6" step="1" value="0"
+                 onchange="branches = parseInt(value) + 4; reset();"
+                 oninput="branches = parseInt(value) + 4; reset();">
+        </div>
         <br><br>
         <label data-size="1/4" for="xbias">bias<sub>x</sub></label>
-        <input data-size="3/4" name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-               onchange="states.set('direction.bias.x', value);"
-               oninput="states.set('direction.bias.x', value);">
-        
+        <div data-size="3/4">
+          <input name="xbias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+                 onchange="states.set('direction.bias.x', value);"
+                 oninput="states.set('direction.bias.x', value);">
+        </div>
         <label data-size="1/4" for="ybias">bias<sub>y</sub></label>
-        <input data-size="3/4" name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
-               onchange="states.set('direction.bias.y', value);"
-               oninput="states.set('direction.bias.y', value);"> 
+        <div data-size="3/4">
+          <input name="ybias" type="range" min="-0.33" max="0.33" step="0.11" value="0"
+                 onchange="states.set('direction.bias.y', value);"
+                 oninput="states.set('direction.bias.y', value);">
+        </div>
         <br><br>
         <label data-size="1/4" for="size">size</label>
-        <input data-size="3/4" name="size" type="range" min="0" max="8" step="2" value="0"
-               onchange="states.set('size', parseInt(value) + 2);" 
-               oninput="states.set('size', parseInt(value) + 2);">
-        
+        <div data-size="3/4">
+          <input name="size" type="range" min="0" max="8" step="2" value="0"
+                 onchange="states.set('size', parseInt(value) + 2);" 
+                 oninput="states.set('size', parseInt(value) + 2);">
+        </div>
         <label data-size="1/4" for="step">step</label>
-        <input data-size="3/4" name="step" type="range" min="0" max="8" step="2" value="0"
-               onchange="states.set('step', parseInt(value) + 8);"
-               oninput="states.set('step', parseInt(value) + 8);">
+        <div data-size="3/4">
+          <input name="step" type="range" min="0" max="8" step="2" value="0"
+                 onchange="states.set('step', parseInt(value) + 8);"
+                 oninput="states.set('step', parseInt(value) + 8);">
+        </div>
         <br><br>
-        <label data-size="1/4" for="red">red</label> 
-        <input data-size="3/4" name="red" type="range" min="0" max="255" step="1" value="0"
-               onchange="states.set('color.0', value);"
-               oninput="states.set('color.0', value);">
-        
+        <label data-size="1/4" for="red">red</label>
+        <div data-size="3/4">
+          <input name="red" type="range" min="0" max="255" step="1" value="0"
+                 onchange="states.set('color.0', value);"
+                 oninput="states.set('color.0', value);">
+        </div>
         <label data-size="1/4" for="green">green</label> 
-        <input data-size="3/4" name="green" type="range" min="0" max="255" step="1" value="0"
-               onchange="states.set('color.1', value);"
-               oninput="states.set('color.1', value);">
-        
+        <div data-size="3/4">
+          <input name="green" type="range" min="0" max="255" step="1" value="0"
+                 onchange="states.set('color.1', value);"
+                 oninput="states.set('color.1', value);">
+        </div>
         <label data-size="1/4" for="blue">blue</label> 
-        <input data-size="3/4" name="blue" type="range" min="0" max="255" step="1" value="0"
-               onchange="states.set('color.2', value);"
-               oninput="states.set('color.2', value);">
+        <div data-size="3/4">
+          <input name="blue" type="range" min="0" max="255" step="1" value="0"
+                 onchange="states.set('color.2', value);"
+                 oninput="states.set('color.2', value);">
+        </div>
         <br><br>
         <div data-size="1/4" id="callstack">call stack: <span data-red>0</span></div>
         <div data-size="3/4" id="traversal"></div>
-        <br><br>
-        <p data-size="1">
+        <br>
+      </div>
+      <div data-grid="collapse">
+        <p data-size="1/4"></p>
+        <p data-size="3/4">
           <a href="#" onclick="reset();">(press <b>r</b> or click here to reset)</a><br>
           <a href="#" onclick="toggle();">(press <b>t</b> or click here to toggle traversal)</a><br>
           <a href="#" onclick="running = !running;">(press <b>space</b> or click here to toggle pause)</a><br>
