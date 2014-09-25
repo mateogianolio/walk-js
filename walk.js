@@ -75,33 +75,35 @@ function update() {
     }
     
     flip = Math.round(Math.random() - state.direction.bias.x);
-    state.direction.x = flip == 1 ? 1 : -1;
+    state.direction.x = flip > .5 ? -1 : 1;
 
     flip = Math.round(Math.random() - state.direction.bias.y);
-    state.direction.y = flip == 0 ? -1 : 1;
+    state.direction.y = flip > .5 ? -1 : 1;
 
     state.position.x += state.step * state.direction.x;
     state.position.y += state.step * state.direction.y;
 
     // TODO:  move to separate function
-    if (state.position.x < 0) {
-      state.position.x = 0;
-      state.direction.x *= -1;
-    }
+    if (state.position != state.parent.position) {
+      if (state.position.x < 0) {
+        state.position.x = 0;
+        state.direction.x *= -1;
+      }
 
-    if (state.position.x > canvas.width) {
-      state.position.x = canvas.width - state.step;
-      state.direction.x *= -1;
-    }
+      if (state.position.x > canvas.width) {
+        state.position.x = canvas.width - state.step;
+        state.direction.x *= -1;
+      }
 
-    if (state.position.y < 0) {
-      state.position.y = 0;
-      state.direction.y *= -1;
-    }
+      if (state.position.y < 0) {
+        state.position.y = 0;
+        state.direction.y *= -1;
+      }
 
-    if (state.position.y > canvas.height) {
-      state.position.y = canvas.height - state.step;
-      state.direction.y *= -1;
+      if (state.position.y > canvas.height) {
+        state.position.y = canvas.height - state.step;
+        state.direction.y *= -1;
+      }
     }
   });
 
@@ -112,7 +114,7 @@ function paint() {
   switch(traversal) {
   case true:
     // traversing..
-    states.forEach(function(state, index, obj) {
+    states.forEach(function(state, index) {
       if(state.parent == null) {
         reset();
         return;
@@ -127,7 +129,7 @@ function paint() {
       context.stroke();
       context.closePath();
 
-      obj[index] = state.parent;
+      states[index] = state.parent;
     });
     
     document.getElementById('callstack').innerHTML = 'stack: <span data-red>' + count-- + '</span>';
