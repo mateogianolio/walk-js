@@ -12,8 +12,8 @@ var State = function(params) {
 };
 
 State.prototype.scatter = function() {
-  this.direction.x = (Math.random() + this.bias.x) > .5 ? 1 : -1;
-  this.direction.y = (Math.random() + this.bias.y) > .5 ? 1 : -1;
+  this.direction.x = (Math.random() - this.bias.x) > .5 ? -1 : 1;
+  this.direction.y = (Math.random() - this.bias.y) > .5 ? -1 : 1;
 };
 
 State.prototype.update = function(x, y, w, h) {

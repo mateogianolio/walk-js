@@ -61,13 +61,9 @@ function loop() {
 
 function paint() {
   states.forEach(function(state, index) {
-    if(traversal) {
-      if(state.parent == null) {
-        reset();
-        return;
-      }
-      
-      states[index] = state.parent;
+    if(state.parent == null) {
+      reset();
+      return;
     }
     
     switch (state.shape) {
@@ -86,6 +82,9 @@ function paint() {
       context.fillRect(state.position.x, state.position.y, 2 * state.size, 2 * state.size);
       break;
     }
+    
+    if(traversal)
+      states[index] = state.parent;
   });
 }
 
